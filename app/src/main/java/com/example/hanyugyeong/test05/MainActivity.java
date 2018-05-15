@@ -25,56 +25,15 @@ public class MainActivity extends AppCompatActivity {
     boolean isPermitted = false;
     final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
-
-    String topAPId;         //가장 센 ap의 이름과 주소
-    int topRssi = -100;     //가장 센 ap의 신호 크기
-
+    //여기선 와이파이가 꺼져있을 때 켜주기 위해
     WifiManager wifiManager;
-    List<ScanResult> scanResultList;    //스캔된 ap 리스트
-
     Button start, stop, record;
 
-    //사전 조사 결과 미리 등록된 장소와 장소에서 가장 센 AP
-    //장소의 이름과 ap 값
-    String []placeArr = {"4층 엘레베이터 앞","408호 계단 앞","401호 계단 앞"};
-    String []wifiArr = {"50:0f:80:b2:51:61","64:e5:99:23:f6:cc","40:01:7a:de:11:32"};
+//    //사전 조사 결과 미리 등록된 장소와 장소에서 가장 센 AP
+//    //장소의 이름과 ap 값
+//    String []placeArr = {"4층 엘레베이터 앞","408호 계단 앞","401호 계단 앞"};
+//    String []wifiArr = {"50:0f:80:b2:51:61","64:e5:99:23:f6:cc","40:01:7a:de:11:32"};
 
-
-
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
-                getWifiInfo();
-        }
-    };
-
-    // RSSI 값이 가장 큰 AP 정보를 얻기 위한 메소드
-    private void getWifiInfo() {
-        scanResultList = wifiManager.getScanResults();
-        String topBSSID;
-        String topSSID;
-
-        // 신호 세기가 가장 센 AP의 정보를 저장하기 위한 변수를 scanResultList의 첫번째 결과로 초기화
-        // top1rssi: AP의 RSSI 값, top1BSSID: AP의 BSSID 값, top1SSID: AP의 SSID 값
-        topRssi = scanResultList.get(0).level;
-        topBSSID = scanResultList.get(0).BSSID;
-        topSSID = scanResultList.get(0).SSID;
-
-        // RSSI 크기가 가장 큰 것의 BSSID, SSID, RSSI 값을 얻음
-        for(int i = 1; i < scanResultList.size(); i++) {
-            ScanResult result = scanResultList.get(i);
-            if (topRssi <= result.level) {
-                topRssi = result.level;
-                topBSSID = result.BSSID;
-                topSSID = result.SSID;
-            }
-        }
-        // 화면의 TextView에 SSID와 BSSID를 이어붙여서 텍스트로 표시
-        topAPId = topSSID +" "+ topBSSID;
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // wifi scan 결과 수신을 위한 BroadcastReceiver 등록
         IntentFilter filter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(mReceiver, filter);
+        //registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -118,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
 
         // wifi scan 결과 수신용 BroadcastReceiver 등록 해제
-        unregisterReceiver(mReceiver);
+        //unregisterReceiver(mReceiver);
     }
 
 
@@ -129,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "Indoor Track 탐지 시작!!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), AlertService.class);
-                intent.putExtra("AP", topAPId);
-                intent.putExtra("RSSI", topRssi);
+//                intent.putExtra("AP", placeArr);
+//                intent.putExtra("RSSI", wifiArr);
                 startService(intent);
             }
         });
