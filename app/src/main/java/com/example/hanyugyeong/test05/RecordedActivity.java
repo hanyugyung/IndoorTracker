@@ -13,12 +13,13 @@ public class RecordedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.support.v7.app.ActionBar ab = getSupportActionBar();
-        ab.setTitle("Encountering Record");
+        ab.setTitle("Record");
         setContentView(R.layout.activity_recorded);
 
         textFileManager = new TextFileManager();
 
         record = findViewById(R.id.record);
+        //모든 파일 내용을 읽어온다.
         record.setText(textFileManager.load());
     }
 }
